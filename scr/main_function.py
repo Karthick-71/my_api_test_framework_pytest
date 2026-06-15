@@ -26,11 +26,11 @@ import sys
 import time
 from pathlib import Path
 
-from api_functions.http_client import APIClient
-from common_functions.config_loader import load_config
-from common_functions.aws_helper import S3Helper
-from common_functions.result_writer import ResultWriter
-from test_config import TestCaseSchema
+from scr.api_functions.http_client import APIClient
+from scr.common_functions.config_loader import load_config
+from scr.common_functions.aws_helper import S3Helper
+from scr.common_functions.result_writer import ResultWriter
+from scr.test_config import TestCaseSchema
 
 logging.basicConfig(
     level=logging.INFO,

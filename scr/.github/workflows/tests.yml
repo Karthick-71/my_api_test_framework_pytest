@@ -1,0 +1,82 @@
+name: API Tests
+
+on:
+  push:
+    branches: [main, develop]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+    inputs:
+      env:
+        description: 'Test environment'
+        required: false
+        default: 'qa'
+        type: choice
+        options: [dev, qa, staging]
+      marker:
+        description: 'Pytest marker filter'
+        required: false
+        default: 'smoke'
+
+jobs:
+  smoke:
+    name: Smoke (every PR)
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    strategy:
+      matrix:
+        python-version: ["3.10", "3.11", "3.12"]
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+          cache: 'pip'
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+
+      - name: Run smoke tests
+        env:
+          TEST_ENV: qa
+        run: pytest -m smoke --html=report-smoke.html --self-contained-html
+
+      - name: Upload smoke report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: smoke-report-py${{ matrix.python-version }}
+          path: report-smoke.html
+
+  regression:
+    name: Regression (manual / nightly)
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    if: github.event_name == 'workflow_dispatch' || github.event_name == 'schedule'
+    needs: smoke
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: 'pip'
+
+      - run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+
+      - name: Run regression in parallel
+        env:
+          TEST_ENV: ${{ github.event.inputs.env || 'qa' }}
+        run: pytest -m "regression and not slow" -n auto --html=report-regression.html --self-contained-html
+
+      - if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: regression-report
+          path: report-regression.html

@@ -19,9 +19,9 @@ from typing import Any, Dict
 
 import pytest
 
-from api_functions.http_client import APIClient
-from common_functions.config_loader import load_config
-from common_functions.aws_helper import S3Helper
+from scr.api_functions.http_client import APIClient
+from scr.common_functions.config_loader import load_config
+from scr.common_functions.aws_helper import S3Helper
 
 logger = logging.getLogger(__name__)
 

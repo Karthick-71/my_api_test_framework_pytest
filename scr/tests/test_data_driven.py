@@ -17,7 +17,7 @@ import pytest
 from pathlib import Path
 from jsonschema import validate, ValidationError
 
-from test_config import TestCaseSchema
+from scr.test_config import TestCaseSchema
 
 
 # ──────────────────────────────────────────────────────────────────────────────
