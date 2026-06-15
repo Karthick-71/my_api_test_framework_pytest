@@ -1,0 +1,87 @@
+{
+  "schema_version": "1.0",
+  "description": "Shared test-case input for both runners (custom main_function.py + pytest tests/test_data_driven.py). Targets httpbin.org so the framework runs anywhere without secrets.",
+  "test_cases": [
+    {
+      "test_name": "get_root_returns_200_or_redirect",
+      "method": "GET",
+      "endpoint": "/get",
+      "payload": null,
+      "expected_status": 200,
+      "tags": ["smoke", "happy_path"]
+    },
+    {
+      "test_name": "get_with_query_args_echoed",
+      "method": "GET",
+      "endpoint": "/get?source=sdet&priority=high",
+      "payload": null,
+      "expected_status": 200,
+      "expected_body_contains": {},
+      "tags": ["regression", "happy_path"]
+    },
+    {
+      "test_name": "post_user_payload_round_trip",
+      "method": "POST",
+      "endpoint": "/post",
+      "payload": {"name": "Karthick", "role": "SDET"},
+      "expected_status": 200,
+      "tags": ["smoke", "happy_path"]
+    },
+    {
+      "test_name": "put_user_replaces_state",
+      "method": "PUT",
+      "endpoint": "/put",
+      "payload": {"id": 1, "name": "Updated"},
+      "expected_status": 200,
+      "tags": ["regression", "happy_path"]
+    },
+    {
+      "test_name": "patch_partial_update",
+      "method": "PATCH",
+      "endpoint": "/patch",
+      "payload": {"status": "active"},
+      "expected_status": 200,
+      "tags": ["regression", "happy_path"]
+    },
+    {
+      "test_name": "delete_returns_200",
+      "method": "DELETE",
+      "endpoint": "/delete",
+      "payload": null,
+      "expected_status": 200,
+      "tags": ["regression", "happy_path"]
+    },
+    {
+      "test_name": "status_404_negative",
+      "method": "GET",
+      "endpoint": "/status/404",
+      "payload": null,
+      "expected_status": 404,
+      "tags": ["regression", "negative"]
+    },
+    {
+      "test_name": "status_500_negative",
+      "method": "GET",
+      "endpoint": "/status/500",
+      "payload": null,
+      "expected_status": 500,
+      "tags": ["regression", "negative"]
+    },
+    {
+      "test_name": "headers_echo_correctly",
+      "method": "GET",
+      "endpoint": "/headers",
+      "headers": {"X-Run-Id": "sdet-demo", "X-Caller": "pytest"},
+      "expected_status": 200,
+      "tags": ["regression", "contract"]
+    },
+    {
+      "test_name": "user_agent_echoed",
+      "method": "GET",
+      "endpoint": "/user-agent",
+      "payload": null,
+      "expected_status": 200,
+      "tags": ["smoke", "contract"]
+    }
+  ]
+}
