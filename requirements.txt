@@ -1,4 +1,19 @@
-pytest>=7.0.0
-pytest-html
-pytest-xdist
-requests
+# Core test framework
+pytest>=7.4.0
+pytest-html>=4.1.0
+pytest-xdist>=3.5.0           # parallel execution via `pytest -n auto`
+pytest-rerunfailures>=14.0    # auto-retry flaky tests
+
+# HTTP / API
+requests>=2.31.0
+jsonschema>=4.21.0            # JSON-schema contract validation
+
+# Data sources
+openpyxl>=3.1.0               # xlsx test-case input
+python-dotenv>=1.0.0          # .env file loading
+
+# AWS (optional — only needed for the `aws` marker)
+boto3>=1.34.0
+
+# Reporting / observability
+rich>=13.7.0                  # pretty CLI output for the custom runner
